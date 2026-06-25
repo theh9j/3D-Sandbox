@@ -19,10 +19,6 @@ public class PlayerDirection : MonoBehaviour
     public bool Jump { get; private set; }
 
 
-    public bool LeftClickDOWN { get; private set; }
-    public bool RightClickDOWN { get; private set; }
-
-
     void Update() {
         switch (CheckForInputType()) {
             case InputType.Computer:
@@ -49,7 +45,6 @@ public class PlayerDirection : MonoBehaviour
         Movement();
         MouseDelta();
         CursorPos();
-        Click(Mouse.current);
     }
 
     private void TouchHandler() {
@@ -90,11 +85,13 @@ public class PlayerDirection : MonoBehaviour
         return defaulted;
     }
 
-    private void Click(Mouse mouse) {
-        LeftClickDOWN = mouse?.leftButton.isPressed ?? false;
-        RightClickDOWN = mouse?.rightButton.isPressed ?? false;
+    public bool IsMouseDown() {
+        return Mouse.current.leftButton.isPressed;
     }
 
+    public bool IsKeyDown(Key key) {
+        return Keyboard.current[key].wasPressedThisFrame;
+    }
 
     //------------------------------------------  TOUCH
 }

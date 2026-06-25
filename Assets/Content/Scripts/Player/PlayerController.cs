@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using UnityEngine;
 
 public enum Modes {
@@ -19,7 +20,7 @@ public class PlayerController : MonoBehaviour
     [Header("Movement Multiplier")]
     [SerializeField] private float baseSpeed = 5f;
     [SerializeField] private float buildSpeed = 10f;
-    [SerializeField] private float jumpForce = 7f;
+    [SerializeField] private readonly float jumpForce = 7f;
 
     [Header("Ground")]
     [SerializeField] private LayerMask groundMask;
@@ -28,12 +29,15 @@ public class PlayerController : MonoBehaviour
     [Header("Sensitivity")]
     [SerializeField] private float sensitivity = .15f;
     [SerializeField] private float fov = 70f;
-    [SerializeField] private float minPitch = -85f;
-    [SerializeField] private float maxPitch = 85f;
+    [SerializeField] private readonly float minPitch = -85f;
+    [SerializeField] private readonly float maxPitch = 85f;
 
     private float yaw;
     private float pitch;
     private bool jumpQueued = false;
+
+    private Vector3 spawPos;
+    private Quaternion spawnRot;
 
     void Awake() {
         if (rb == null) {
@@ -45,17 +49,18 @@ public class PlayerController : MonoBehaviour
     }
 
     void Start() {
-        if (SaveManager.Instance != null) {
-            sensitivity = SaveManager.Instance.sensitivity;
-            fov = SaveManager.Instance.fov;
-        }
+        
         yaw = transform.eulerAngles.y;
 
         ChangeMode(Modes.Normal);
         NormalMode();
+        StartCoroutine(OnLaunch());
     }
 
     void Update() {
+        if (WorldManager.Instance != null && transform.position.y < WorldManager.Instance.DepthLimit) {
+            Respawn();
+        }
 
         if (cam != null) {
             cam.fieldOfView = fov;
@@ -67,6 +72,14 @@ public class PlayerController : MonoBehaviour
 
         if (currentMode == Modes.Normal && direction.Jump) {
             jumpQueued = true;
+        }
+    }
+
+    private IEnumerator OnLaunch() {
+        yield return new WaitUntil(() => SaveManager.Instance.init);
+        if (SaveManager.Instance != null) {
+            sensitivity = SaveManager.Instance.sensitivity;
+            fov = SaveManager.Instance.fov;
         }
     }
 
@@ -83,12 +96,12 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    public string CurrentMode() {
+    public int CurrentMode() {
         return currentMode switch {
-            Modes.Normal => "Normal",
-            Modes.Build => "Build",
-            Modes.Spectate => "Spectate", //STC
-            _ => "None"
+            Modes.Normal => 1,
+            Modes.Build => 2,
+            Modes.Spectate => 3, //STC
+            _ => 0
         };
     }
 
@@ -119,19 +132,24 @@ public class PlayerController : MonoBehaviour
     }
 
     private void NormalMove() {
-        Vector3 move = transform.right * direction.Move.x + transform.forward * direction.Move.y;
+        Vector3 move =
+            transform.right * direction.Move.x +
+            transform.forward * direction.Move.y;
 
-        if (move.magnitude > 1f) move.Normalize();
+        if (move.magnitude > 1f)
+            move.Normalize();
 
         Vector3 velocity = rb.linearVelocity;
+
         velocity.x = move.x * baseSpeed;
         velocity.z = move.z * baseSpeed;
 
         rb.linearVelocity = velocity;
 
-        if ((jumpQueued) && IsGrounded()) {
-            rb.AddForce(Vector3.up * jumpForce, ForceMode.Force);
+        if (jumpQueued && IsGrounded()) {
+            rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
         }
+
         jumpQueued = false;
     }
 
@@ -140,6 +158,13 @@ public class PlayerController : MonoBehaviour
         rb.useGravity = true;
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
+    }
+
+    private void Respawn() {
+        rb.linearVelocity = Vector3.zero;
+        rb.angularVelocity = Vector3.zero;
+
+        transform.SetPositionAndRotation(spawPos, spawnRot);
     }
 
     //-------- BUILD MODE -----------
@@ -169,6 +194,15 @@ public class PlayerController : MonoBehaviour
         if (mode == currentMode) return false;
 
         currentMode = mode;
+        switch (currentMode) {
+            case Modes.Normal:
+                NormalMode();
+                break;
+            case Modes.Build:
+                BuildMode(); 
+                break;
+        }
+
         return true;
     }
     private bool IsGrounded() {

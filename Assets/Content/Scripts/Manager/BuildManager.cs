@@ -1,8 +1,7 @@
 using UnityEngine;
 
-public abstract class BuildManager : MonoBehaviour
+public class BuildManager : MonoBehaviour
 {
-    public static BuildManager Instance;
 
     [Header("Size Settings")]
     [SerializeField] private Vector3 minSize = new(.2f, .2f, .2f);

@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class SaveManager : MonoBehaviour
 {
@@ -7,17 +8,21 @@ public class SaveManager : MonoBehaviour
 
     [SerializeField] private bool resetData = false;
 
-    //Player Settings
-    public float sensitivity;
-    public float fov;
+    //Camera
+    [HideInInspector] public float sensitivity;
+    [HideInInspector] public float fov;
+
+    //Keybind
+    [HideInInspector] public Key interact;
 
     //Audio
-    public float musicVolume;
-    public bool musicMuted;
+    [HideInInspector] public float musicVolume;
+    [HideInInspector] public bool musicMuted;
 
-    public float sfxVolume;
-    public bool sfxMuted;
-    
+    [HideInInspector] public float sfxVolume;
+    [HideInInspector] public bool sfxMuted;
+
+    [HideInInspector] public bool init = false;
 
     void Awake() {
         if (Instance != null) {
@@ -30,40 +35,44 @@ public class SaveManager : MonoBehaviour
     }
     
     void Start() {
-        if (resetData) PlayerPrefs.DeleteAll();
+        if (resetData) PlayerPrefs.DeleteKey("FirstLaunch");
         if (!PlayerPrefs.HasKey("FirstLaunch")) { 
             FirstLaunch();
+            init = true;
             return;
         }
 
         sensitivity = PlayerPrefs.GetFloat("Sensitivity", .15f);
-        fov = PlayerPrefs.GetFloat("FOV", .7f);
+        fov = PlayerPrefs.GetFloat("FOV", 70f);
+
+        interact = GetKeybind(Key.E, "Interact");
 
         musicVolume = PlayerPrefs.GetFloat("MusicVolume", 1f);
         musicMuted = PlayerPrefs.GetInt("MusicMuted", 0) == 1 ? true : false;
 
         sfxVolume = PlayerPrefs.GetFloat("SFXVolume", 1f);
         sfxMuted = PlayerPrefs.GetInt("SFXMuted", 0) == 1 ? true : false;
+        init = true;
     }
 
     private void FirstLaunch() {
-        sensitivity = .15f;
-        fov = .7f;
-
-        musicVolume = 1f;
-        musicMuted = false;
-
-        sfxVolume = 1f;
-        sfxMuted = false;
+        FirstLaunchGeneric();
+        FirstLaunchKB();
 
         PlayerPrefs.SetInt("FirstLaunch", 1);
         PlayerPrefs.Save();
     }
 
     private void Save() {
+        //CAMERA
         PlayerPrefs.SetFloat("Sensitivity", sensitivity);
         PlayerPrefs.SetFloat("FOV", fov);
 
+        //KEYBIND
+        PlayerPrefs.SetString("Interact", interact.ToString());
+
+
+        //AUDIO
         PlayerPrefs.SetFloat("MusicVolume", musicVolume);
         PlayerPrefs.SetInt("MusicMuted", musicMuted ? 1 : 0);
 
@@ -71,7 +80,6 @@ public class SaveManager : MonoBehaviour
         PlayerPrefs.SetInt("SFXMuted", sfxMuted ? 1 : 0);
 
         PlayerPrefs.Save();
-
     }
 
     void OnApplicationPause(bool pause) {
@@ -82,4 +90,29 @@ public class SaveManager : MonoBehaviour
         Save();
     }
 
+    //HELPER
+
+    private Key GetKeybind(Key keyType, string key) {
+        if (!Enum.TryParse(PlayerPrefs.GetString(key), out Key convert)) {
+            return keyType;
+        }
+        return convert;
+    }
+
+    private void FirstLaunchGeneric() {
+        sensitivity = .15f;
+        fov = 70f;
+
+        musicVolume = 1f;
+        musicMuted = false;
+
+        sfxVolume = 1f;
+        sfxMuted = false;
+    }
+
+    private void FirstLaunchKB() {
+        interact = Key.E;
+    }
+
+    
 }
