@@ -10,16 +10,17 @@ public enum InputType {
 
 public class PlayerDirection : MonoBehaviour
 {
+    [SerializeField] private PlayerInteractor interactor;
     public InputType CurrentInputType { get; private set; }
-
-    //Computer Variables
     public Vector2 LookDelta { get; private set; }
     public Vector2 Cursor {  get; private set; }
     public Vector2 Move {  get; private set; }
     public bool Jump { get; private set; }
+    public bool Sprint { get; private set; } = false;
 
 
     void Update() {
+        if (interactor.InputLocked) return;
         switch (CheckForInputType()) {
             case InputType.Computer:
                 ComputerHandler();
@@ -75,6 +76,12 @@ public class PlayerDirection : MonoBehaviour
             );
 
         Jump = Keyboard.current != null && Keyboard.current.spaceKey.wasPressedThisFrame;
+
+        if (SaveManager.Instance.sprintToggle) {
+            if (Keyboard.current != null && Keyboard.current[SaveManager.Instance.sprint].wasPressedThisFrame) Sprint = !Sprint;
+        } else {
+            Sprint = Keyboard.current != null && Keyboard.current[SaveManager.Instance.sprint].isPressed;
+        }
     }
 
     private float GetKey(Key negative, Key positive) {

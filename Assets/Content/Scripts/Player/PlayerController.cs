@@ -11,14 +11,15 @@ public enum Modes {
 public class PlayerController : MonoBehaviour
 {
     [SerializeField] private PlayerDirection direction;
+    [SerializeField] private PlayerInteractor interactor;
+    [SerializeField] private PlayerHealth health;
     [SerializeField] private Rigidbody rb;
     [SerializeField] private Transform cameraPivot;
     [SerializeField] private Camera cam;
 
-    private Modes currentMode;
-
     [Header("Movement Multiplier")]
     [SerializeField] private float baseSpeed = 5f;
+    [SerializeField] private float sprintMultiplier = 1.5f;
     [SerializeField] private float buildSpeed = 10f;
     [SerializeField] private readonly float jumpForce = 7f;
 
@@ -35,9 +36,12 @@ public class PlayerController : MonoBehaviour
     private float yaw;
     private float pitch;
     private bool jumpQueued = false;
+    private bool isRunning = false;
 
     private Vector3 spawPos;
     private Quaternion spawnRot;
+
+    public Modes CurrentMode { get; private set; }
 
     void Awake() {
         if (rb == null) {
@@ -58,6 +62,8 @@ public class PlayerController : MonoBehaviour
     }
 
     void Update() {
+        if (interactor.InputLocked) return;
+
         if (WorldManager.Instance != null && transform.position.y < WorldManager.Instance.DepthLimit) {
             Respawn();
         }
@@ -66,12 +72,16 @@ public class PlayerController : MonoBehaviour
             cam.fieldOfView = fov;
         }
 
-        if (currentMode == Modes.Normal) {
-            NormalLook();
-        }
+        CheckMode();
 
-        if (currentMode == Modes.Normal && direction.Jump) {
-            jumpQueued = true;
+        if (CurrentMode == Modes.Normal) {
+            NormalLook();
+
+            if (direction.Jump) {
+                jumpQueued = true;
+            }
+
+            isRunning = direction.Sprint;
         }
     }
 
@@ -84,7 +94,7 @@ public class PlayerController : MonoBehaviour
     }
 
     void FixedUpdate() {
-        switch (currentMode) {
+        switch (CurrentMode) {
             case Modes.Normal:
                 NormalMove();
                 break;
@@ -94,15 +104,6 @@ public class PlayerController : MonoBehaviour
             default:
                 break;
         }
-    }
-
-    public int CurrentMode() {
-        return currentMode switch {
-            Modes.Normal => 1,
-            Modes.Build => 2,
-            Modes.Spectate => 3, //STC
-            _ => 0
-        };
     }
 
     public void ChangeSensitivity(float sensitivity) {
@@ -131,6 +132,18 @@ public class PlayerController : MonoBehaviour
         cameraPivot.localRotation = Quaternion.Euler(pitch, 0f, 0f);
     }
 
+    private float Sprint() {
+        bool isMoving = direction.Move.sqrMagnitude > 0.01f;
+
+        if (!direction.Sprint || !isMoving)
+            return 1f;
+
+        if (health == null || !health.CanSprint)
+            return 1f;
+
+        return sprintMultiplier;
+    }
+
     private void NormalMove() {
         Vector3 move =
             transform.right * direction.Move.x +
@@ -141,8 +154,10 @@ public class PlayerController : MonoBehaviour
 
         Vector3 velocity = rb.linearVelocity;
 
-        velocity.x = move.x * baseSpeed;
-        velocity.z = move.z * baseSpeed;
+        float speed = baseSpeed * Sprint();
+
+        velocity.x = move.x * speed;
+        velocity.z = move.z * speed;
 
         rb.linearVelocity = velocity;
 
@@ -154,10 +169,9 @@ public class PlayerController : MonoBehaviour
     }
 
     private void NormalMode() {
-        if (currentMode != Modes.Normal) return;
+        if (CurrentMode != Modes.Normal) return;
         rb.useGravity = true;
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
+        interactor.FreeMouse(false);
     }
 
     private void Respawn() {
@@ -176,32 +190,37 @@ public class PlayerController : MonoBehaviour
 
         if (move.magnitude > 1f) move.Normalize();
 
-        rb.linearVelocity = move * buildSpeed;
+        float speed = buildSpeed * Sprint();
+
+        rb.linearVelocity = move * speed;
     }
 
     private void BuildMode() {
-        if (currentMode != Modes.Build) return;
+        if (CurrentMode != Modes.Build) return;
         rb.linearVelocity = Vector3.zero;
         rb.angularVelocity = Vector3.zero;
 
-        Cursor.lockState = CursorLockMode.None;
-        Cursor.visible = true;
+        interactor.FreeMouse(true);
     }
 
     //-------- HELPERS -----------
 
-    private bool ChangeMode(Modes mode) {
-        if (mode == currentMode) return false;
-
-        currentMode = mode;
-        switch (currentMode) {
+    private void CheckMode() {
+        switch (CurrentMode) {
             case Modes.Normal:
                 NormalMode();
                 break;
             case Modes.Build:
-                BuildMode(); 
+                BuildMode();
                 break;
         }
+    }
+
+    private bool ChangeMode(Modes mode) {
+        if (mode == CurrentMode) return false;
+
+        CurrentMode = mode;
+        CheckMode();
 
         return true;
     }

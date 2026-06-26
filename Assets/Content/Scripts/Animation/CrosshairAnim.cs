@@ -10,7 +10,7 @@ public class CrosshairAnim : MonoBehaviour
     [SerializeField] private float delay = .2f;
     
     void Update() {
-        if (controller.CurrentMode() == 1) crosshair.gameObject.SetActive(true);
+        if (controller.CurrentMode == Modes.Normal) crosshair.gameObject.SetActive(true);
         else crosshair.gameObject.SetActive(false);
     }
 
