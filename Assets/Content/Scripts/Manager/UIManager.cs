@@ -18,6 +18,7 @@ public class UIManager : MonoBehaviour
 
     void Awake() {
         interact.openSettings += ToggleSettings;
+        SetBlur(false);
     }
 
     void Update() {
@@ -48,7 +49,7 @@ public class UIManager : MonoBehaviour
 
     private void SetBlur(bool active) {
         backgroundBlur.SetFloat("_BlurStrength", active ? 1.4f : 0f);
-        backgroundBlur.SetFloat("_Darken", active ? .7f : 0f);
+        backgroundBlur.SetFloat("_Darken", active ? .5f : 0f);
     }
 
     public void ToggleSettings() {
