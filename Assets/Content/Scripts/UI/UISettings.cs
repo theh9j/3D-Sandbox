@@ -40,8 +40,9 @@ public class UISettings : MonoBehaviour
     }
 
     private void Quit() {
+        ui.ToggleSettings();
     #if UNITY_EDITOR
-            UnityEditor.EditorApplication.isPlaying = false;
+        UnityEditor.EditorApplication.isPlaying = false;
     #else
         Application.Quit(); 
     #endif

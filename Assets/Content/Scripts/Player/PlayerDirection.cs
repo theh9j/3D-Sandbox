@@ -58,6 +58,7 @@ public class PlayerDirection : MonoBehaviour
         Move = Vector2.zero;
     }
 
+
     //------------------------------------------  COMPUTER
 
 

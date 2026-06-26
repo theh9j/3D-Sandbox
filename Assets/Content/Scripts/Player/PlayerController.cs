@@ -86,7 +86,7 @@ public class PlayerController : MonoBehaviour
     }
 
     private IEnumerator OnLaunch() {
-        yield return new WaitUntil(() => SaveManager.Instance.init);
+        yield return new WaitUntil(() => SaveManager.Instance != null && SaveManager.Instance.init);
         if (SaveManager.Instance != null) {
             sensitivity = SaveManager.Instance.sensitivity;
             fov = SaveManager.Instance.fov;

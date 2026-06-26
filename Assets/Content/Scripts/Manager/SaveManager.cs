@@ -24,10 +24,8 @@ public class SaveManager : MonoBehaviour
 
     //Audio
     [HideInInspector] public float musicVolume;
-    [HideInInspector] public bool musicMuted;
-
     [HideInInspector] public float sfxVolume;
-    [HideInInspector] public bool sfxMuted;
+    [HideInInspector] public float enviromentVolume;
 
     [HideInInspector] public bool init = false;
 
@@ -60,10 +58,9 @@ public class SaveManager : MonoBehaviour
         sprint = GetKeybind(Key.LeftShift, "Sprint");
 
         musicVolume = PlayerPrefs.GetFloat("MusicVolume", 1f);
-        musicMuted = PlayerPrefs.GetInt("MusicMuted", 0) == 1;
-
         sfxVolume = PlayerPrefs.GetFloat("SFXVolume", 1f);
-        sfxMuted = PlayerPrefs.GetInt("SFXMuted", 0) == 1;
+        enviromentVolume = PlayerPrefs.GetFloat("EnvironmentVolume", 1f);
+
         init = true;
     }
 
@@ -92,10 +89,8 @@ public class SaveManager : MonoBehaviour
 
         //AUDIO
         PlayerPrefs.SetFloat("MusicVolume", musicVolume);
-        PlayerPrefs.SetInt("MusicMuted", musicMuted ? 1 : 0);
-
         PlayerPrefs.SetFloat("SFXVolume", sfxVolume);
-        PlayerPrefs.SetInt("SFXMuted", sfxMuted ? 1 : 0);
+        PlayerPrefs.SetFloat("EnvironmentVolume", enviromentVolume);
 
         PlayerPrefs.Save();
     }
@@ -126,10 +121,8 @@ public class SaveManager : MonoBehaviour
         sprintToggle = false;
 
         musicVolume = 1f;
-        musicMuted = false;
-
         sfxVolume = 1f;
-        sfxMuted = false;
+        enviromentVolume = 1f;
     }
 
     private void FirstLaunchKB() {

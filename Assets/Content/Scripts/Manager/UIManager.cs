@@ -60,13 +60,13 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    public void OpenSettings() {
+    private void OpenSettings() {
         SettingOpen = true;
         settings?.SetActive(true);
         CurrentState = UIState.SemiPause;
     }
 
-    public void CloseSettings() {
+    private void CloseSettings() {
         SettingOpen = false;
         settings?.SetActive(false);
         CurrentState = UIState.Gameplay;

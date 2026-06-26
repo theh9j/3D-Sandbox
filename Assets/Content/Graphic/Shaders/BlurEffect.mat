@@ -37,8 +37,8 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _BlurStrength: 1
-    - _Darken: 0.15
+    - _BlurStrength: 0
+    - _Darken: 0
     - _Distance: 0.002
     - _Division: 9
     m_Colors: []
