@@ -2,22 +2,26 @@ using DG.Tweening;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UIElements;
 
 public class UIButtonAnimation :
     MonoBehaviour,
     IPointerDownHandler,
     IPointerUpHandler,
     IPointerExitHandler {
+
     [SerializeField] private RectTransform face;
     [SerializeField] private TMP_Text front;
     [SerializeField] private TMP_Text back;
 
     [SerializeField] private Vector2 releasedPos;
+    [SerializeField] private Vector2 hoverPos;
     [SerializeField] private Vector2 pressedPos;
 
     [SerializeField] private float duration = 0.08f;
 
     private Tween currentTween;
+    private bool hovering;
 
     private void Awake() {
         if (face == null)
@@ -26,16 +30,22 @@ public class UIButtonAnimation :
         releasedPos = face.anchoredPosition;
     }
 
+    public void OnPointerEnter(PointerEventData eventData) {
+        hovering = true;
+        AnimateTo(hoverPos);
+    }
+
+    public void OnPointerExit(PointerEventData eventData) {
+        hovering = false;
+        AnimateTo(releasedPos);
+    }
+
     public void OnPointerDown(PointerEventData eventData) {
         AnimateTo(pressedPos);
     }
 
     public void OnPointerUp(PointerEventData eventData) {
-        AnimateTo(releasedPos);
-    }
-
-    public void OnPointerExit(PointerEventData eventData) {
-        AnimateTo(releasedPos);
+        AnimateTo(hovering ? hoverPos : releasedPos);
     }
 
     public void SetText(string text) {

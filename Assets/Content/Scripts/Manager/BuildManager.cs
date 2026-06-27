@@ -12,7 +12,6 @@ public class BuildManager : MonoBehaviour
     [SerializeField] private Vector3 maxSize = new(5f, 5f, 5f);
 
     [Header("Camera Settings")]
-    [SerializeField] private float distanceCamera = 100f;
 
 
     private Vector3 modelPos;

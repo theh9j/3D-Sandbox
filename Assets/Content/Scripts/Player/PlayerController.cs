@@ -2,12 +2,6 @@ using System;
 using System.Collections;
 using UnityEngine;
 
-public enum Modes {
-    Normal,
-    Build,
-    Spectate
-}
-
 public class PlayerController : MonoBehaviour
 {
     [SerializeField] private PlayerDirection direction;

@@ -11,10 +11,15 @@ public class AudioManager : MonoBehaviour
     [SerializeField] private AudioSource music;
     [SerializeField] private AudioSource sFX;
     [SerializeField] private AudioSource environment;
+    [SerializeField] private int chance = 26;
     [SerializeField] private List<AudioClip> musicPlaylist = new();
+    private float mainVolume;
+    private float musicVolume;
+    private float sfxVolume;
+    private float environmentVolume;
+
     private AudioClip previousClip;
     private Coroutine musicPlay;
-    public float MusicVolume { get; private set; }
 
 
 
@@ -32,30 +37,48 @@ public class AudioManager : MonoBehaviour
     }
 
     private IEnumerator OnLaunch() {
-        yield return new WaitUntil(() => SaveManager.Instance != null && SaveManager.Instance.init);
-        if (SaveManager.Instance != null) {
-            SetMusicVolume(SaveManager.Instance.musicVolume);
-            SetSFXVolume(SaveManager.Instance.sfxVolume);
-            SetEnvironmentVolume(SaveManager.Instance.enviromentVolume);
+        yield return new WaitUntil(() =>
+            SaveManager.Instance != null && SaveManager.Instance.init
+        );
 
-            StartCoroutine(RunPlaylist());
-        }
+        mainVolume = SaveManager.Instance.mainVolume;
+        musicVolume = SaveManager.Instance.musicVolume;
+        sfxVolume = SaveManager.Instance.sfxVolume;
+        environmentVolume = SaveManager.Instance.enviromentVolume;
+
+        ApplyVolumes();
+
+        StartCoroutine(RunPlaylist());
+    }
+
+    public void SetMainVolume(float volume) {
+        mainVolume = volume;
+        SaveManager.Instance.mainVolume = volume;
+        ApplyVolumes();
     }
 
     public void SetMusicVolume(float volume) {
-        music.volume = volume;
-        MusicVolume = volume;
-        SaveManager.Instance.musicVolume = music.volume;
+        musicVolume = volume;
+        SaveManager.Instance.musicVolume = volume;
+        ApplyVolumes();
     }
 
     public void SetSFXVolume(float volume) {
-        sFX.volume = volume;
-        SaveManager.Instance.sfxVolume = sFX.volume;
+        sfxVolume = volume;
+        SaveManager.Instance.sfxVolume = volume;
+        ApplyVolumes();
     }
 
     public void SetEnvironmentVolume(float volume) {
-        environment.volume = volume;
-        SaveManager.Instance.enviromentVolume = environment.volume;
+        environmentVolume = volume;
+        SaveManager.Instance.enviromentVolume = volume;
+        ApplyVolumes();
+    }
+
+    private void ApplyVolumes() {
+        music.volume = musicVolume * mainVolume;
+        sFX.volume = sfxVolume * mainVolume;
+        environment.volume = environmentVolume * mainVolume;
     }
 
     public void PlaySFX(AudioClip clip) {
@@ -65,17 +88,18 @@ public class AudioManager : MonoBehaviour
     private IEnumerator PlayMusic(AudioClip clip) {
         music.clip = clip;
         previousClip = clip;
+        float initialVolume = music.volume;
         music.volume = 0f;
         music.Play();
 
-        yield return music.DOFade(MusicVolume, .5f).WaitForCompletion();
+        yield return music.DOFade(initialVolume, .5f).WaitForCompletion();
 
         yield return new WaitForSeconds(Mathf.Max(0f, clip.length - 1f));
 
         yield return music.DOFade(0f, .5f).WaitForCompletion();
 
         music.Stop();
-        music.volume = MusicVolume;
+        music.volume = initialVolume;
         musicPlay = null;
     }
 
@@ -83,9 +107,10 @@ public class AudioManager : MonoBehaviour
         while (true) {
             if (musicPlay == null &&
                 !music.isPlaying &&
-                !Mathf.Approximately(MusicVolume, 0f) &&
+                !Mathf.Approximately(music.volume, 0f) &&
+                !Mathf.Approximately(mainVolume, 0f) &&
                 musicPlaylist.Count > 1 &&
-                Random.Range(0, 26) == 5) {
+                Random.Range(0, chance) == 1) { 
 
                 List<AudioClip> playable = musicPlaylist
                     .Where(x => x != previousClip)

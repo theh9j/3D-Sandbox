@@ -1,18 +1,14 @@
 using System;
 using UnityEngine;
 
-public enum UIState {
-    Gameplay,
-    SemiPause,
-    Pause,
-}
+
 
 public class UIManager : MonoBehaviour
 {
     [SerializeField] private PlayerInteractor interact;
-    [SerializeField] private GameObject settings;
+    [SerializeField] private GameObject settingsGameObject;
     [SerializeField] private Material backgroundBlur;
-
+    public event Func<bool> SettingToggles;
     public bool SettingOpen {  get; private set; }
     public UIState CurrentState { get; private set; }
 
@@ -53,22 +49,23 @@ public class UIManager : MonoBehaviour
     }
 
     public void ToggleSettings() {
-        if (SettingOpen) {
-            CloseSettings();
-        } else {
+        if (!SettingOpen) {
             OpenSettings();
+        } else {
+            if (SettingToggles.Invoke()) return;
+            CloseSettings();
         }
     }
 
     private void OpenSettings() {
         SettingOpen = true;
-        settings?.SetActive(true);
+        settingsGameObject?.SetActive(true);
         CurrentState = UIState.SemiPause;
     }
 
     private void CloseSettings() {
         SettingOpen = false;
-        settings?.SetActive(false);
+        settingsGameObject?.SetActive(false);
         CurrentState = UIState.Gameplay;
     }
 }

@@ -11,18 +11,22 @@ public class SaveManager : MonoBehaviour
     //Player
     [HideInInspector] public float stamina; //Stamina == 999 -> Reset to Max
 
+    //Settings
+    [HideInInspector] public int fps;
+    [HideInInspector] public bool vsync;
+    [HideInInspector] public string antiAlias;
+
     //Camera
     [HideInInspector] public float sensitivity;
     [HideInInspector] public float fov;
 
-    //KeySettings
     [HideInInspector] public bool sprintToggle;
 
-    //Keybind
     [HideInInspector] public Key interact;
     [HideInInspector] public Key sprint;
 
     //Audio
+    [HideInInspector] public float mainVolume;
     [HideInInspector] public float musicVolume;
     [HideInInspector] public float sfxVolume;
     [HideInInspector] public float enviromentVolume;
@@ -49,6 +53,10 @@ public class SaveManager : MonoBehaviour
 
         stamina = PlayerPrefs.GetFloat("Stamina", 999f);
 
+        fps = PlayerPrefs.GetInt("FPS", 60);
+        vsync = PlayerPrefs.GetInt("VSync", 1) == 1;
+        antiAlias = PlayerPrefs.GetString("AntiAliasing", "Disabled");
+
         sensitivity = PlayerPrefs.GetFloat("Sensitivity", .15f);
         fov = PlayerPrefs.GetFloat("FOV", 70f);
 
@@ -57,6 +65,7 @@ public class SaveManager : MonoBehaviour
         interact = GetKeybind(Key.E, "Interact");
         sprint = GetKeybind(Key.LeftShift, "Sprint");
 
+        mainVolume = PlayerPrefs.GetFloat("MainVolume", 1f);
         musicVolume = PlayerPrefs.GetFloat("MusicVolume", 1f);
         sfxVolume = PlayerPrefs.GetFloat("SFXVolume", 1f);
         enviromentVolume = PlayerPrefs.GetFloat("EnvironmentVolume", 1f);
@@ -76,18 +85,22 @@ public class SaveManager : MonoBehaviour
         //PLAYER
         PlayerPrefs.SetFloat("Stamina", stamina);
 
-        //CAMERA
+        //SETTINGS
+        PlayerPrefs.SetInt("FPS", fps);
+        PlayerPrefs.SetInt("VSync", vsync ? 1 : 0);
+        PlayerPrefs.SetString("AntiAliasing", antiAlias);
+
+        //KEYSETTINGS
         PlayerPrefs.SetFloat("Sensitivity", sensitivity);
         PlayerPrefs.SetFloat("FOV", fov);
 
-        //KEYSETTINGS
         PlayerPrefs.SetInt("SprintToggle", sprintToggle ? 1 : 0);
 
-        //KEYBIND
         PlayerPrefs.SetString("Interact", interact.ToString());
         PlayerPrefs.SetString("Sprint", sprint.ToString());
 
         //AUDIO
+        PlayerPrefs.SetFloat("MainVolume", mainVolume);
         PlayerPrefs.SetFloat("MusicVolume", musicVolume);
         PlayerPrefs.SetFloat("SFXVolume", sfxVolume);
         PlayerPrefs.SetFloat("EnvironmentVolume", enviromentVolume);
@@ -115,11 +128,15 @@ public class SaveManager : MonoBehaviour
     private void FirstLaunchGeneric() {
         stamina = 999f;
 
+        fps = 60;
+        vsync = false;
+        antiAlias = "Disabled";
         sensitivity = .15f;
         fov = 70f;
 
         sprintToggle = false;
 
+        mainVolume = 1f;
         musicVolume = 1f;
         sfxVolume = 1f;
         enviromentVolume = 1f;

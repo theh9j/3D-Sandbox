@@ -2,11 +2,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public enum InputType {
-    None,
-    Computer,
-    Touch
-}
+
 
 public class PlayerDirection : MonoBehaviour
 {
