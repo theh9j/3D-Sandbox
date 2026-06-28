@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.Rendering.Universal;
 
 public partial class UISettings : MonoBehaviour
 {
@@ -39,28 +40,37 @@ public partial class UISettings : MonoBehaviour
             value => Mathf.Approximately(value, maxFps) ? "Unlimited" : value.ToString(),
             value => {
                 int fps = Mathf.Approximately(value, maxFps) ? -1 : Mathf.RoundToInt(value);
-                SaveManager.Instance.fps = fps;
-                if (QualitySettings.vSyncCount == 0) Application.targetFrameRate = fps;
+                if (QualitySettings.vSyncCount == 0) SettingsManager.Instance.SetFPS(fps);
             });
 
         Dropdown(OptionIDs.VSync, SaveManager.Instance.vsync ? 1 : 0,
             index => {
-                switch (index) {
-                    case 0:
-                        Application.targetFrameRate = SaveManager.Instance.fps;
-                        QualitySettings.vSyncCount = 0;
-                        break;
-                    case 1:
-                        Application.targetFrameRate = -1;
-                        QualitySettings.vSyncCount = 1; 
-                        break;
-                    default:
-                        return;
-                }
-                SaveManager.Instance.vsync = index == 1;
+                SettingsManager.Instance.SetVSync(index == 1);
                 if (!optionList.TryGetValue(OptionIDs.FPSLimit, out UIOptions fps)) return;
                 if (fps is not UISliderTypeB fpsSlider) return;
                 fpsSlider.Slider.interactable = index == 0;
+            });
+
+        Dropdown(OptionIDs.AntiAliasing, 
+                () => SaveManager.Instance.antiAlias switch {
+                    "Disabled" => 0,
+                    "TAA" => 1,
+                    "SMAA" => 2,
+                    _ => 0
+                },
+            index => {
+                
+                switch (index) {
+                    case 0:
+                        SettingsManager.Instance.SetAntiAlias("Disabled");
+                        break;
+                    case 1:
+                        SettingsManager.Instance.SetAntiAlias("TAA");
+                        break;
+                    case 2:
+                        SettingsManager.Instance.SetAntiAlias("SMAA");
+                        break;
+                }
             });
     }
 
@@ -97,6 +107,7 @@ public partial class UISettings : MonoBehaviour
         sliderUI.Slider.wholeNumbers = wholeNumbers;
 
         SetSliderBValue(sliderUI, value, textFormat);
+        apply(value);
 
         sliderUI.Slider.onValueChanged.AddListener(value => {
             SetSliderBValue(sliderUI, value, textFormat);
@@ -131,5 +142,9 @@ public partial class UISettings : MonoBehaviour
         dropdown.Dropdown.onValueChanged.AddListener(text => {
             apply(text);
         });
+    }
+
+    private void Dropdown(OptionIDs id, Func<int> value, Action<int> apply) {
+        Dropdown(id, value(), apply);
     }
 }

@@ -1515,7 +1515,7 @@ MonoBehaviour:
   music: {fileID: 1663525128}
   sFX: {fileID: 2134020811}
   environment: {fileID: 2144403242}
-  chance: 2
+  chance: 26
   musicPlaylist:
   - {fileID: 8300000, guid: 43e768e288f0e4947abbbb70d507bc55, type: 3}
   - {fileID: 8300000, guid: eb988793d7f15324489fc88fe5ea9d23, type: 3}
@@ -2443,11 +2443,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 355e681cdc6f2db46a854d43f91ed265, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UISettings
+  minFps: 30
+  maxFps: 241
   preferenceSettings: {fileID: 1353319941}
   scrollRect: {fileID: 124483565}
+  viewPort: {fileID: 1905988071}
+  contentBox: {fileID: 1781349404}
   database: {fileID: 11400000, guid: ddc0f7c4374884b4a9cdb6ff6da4f2f9, type: 2}
   registry: {fileID: 11400000, guid: 421c10384aad2114faba95083b061738, type: 2}
-  contentBox: {fileID: 1781349404}
   ui: {fileID: 1284003611}
   settings:
   - {fileID: 150866926}
@@ -4925,7 +4928,7 @@ MonoBehaviour:
     m_Left: 100
     m_Right: 100
     m_Top: 0
-    m_Bottom: 100
+    m_Bottom: 0
   m_ChildAlignment: 1
   m_Spacing: 0
   m_ChildForceExpandWidth: 1
@@ -5209,6 +5212,7 @@ GameObject:
   - component: {fileID: 1905988074}
   - component: {fileID: 1905988073}
   - component: {fileID: 1905988072}
+  - component: {fileID: 1905988075}
   m_Layer: 5
   m_Name: Viewport
   m_TagString: Untagged
@@ -5287,6 +5291,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1905988070}
   m_CullTransparentMesh: 1
+--- !u!114 &1905988075
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1905988070}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3312d7739989d2b4e91e6319e9a96d76, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.RectMask2D
+  m_Padding: {x: 0, y: 0, z: 0, w: 0}
+  m_Softness: {x: 100, y: 100}
 --- !u!1 &1911886848
 GameObject:
   m_ObjectHideFlags: 0

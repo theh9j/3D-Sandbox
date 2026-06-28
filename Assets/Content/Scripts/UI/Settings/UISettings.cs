@@ -21,7 +21,6 @@ public partial class UISettings : MonoBehaviour
         preferencesTrans = preferenceSettings.transform;
 
         ui.SettingToggles += ToggleSettings;
-
         optionList = Build();
         OnCreateSliderFunc();
     }

@@ -20,32 +20,32 @@ MonoBehaviour:
       optionName: Main Volume
       type: 0
       dropdownOptions: []
-    - optionID: 0
+    - optionID: 1
       optionName: Music Volume
       type: 0
       dropdownOptions: []
-    - optionID: 0
+    - optionID: 2
       optionName: SFX Volume
       type: 0
       dropdownOptions: []
-    - optionID: 0
-      optionName: Main  Volume
+    - optionID: 3
+      optionName: Environment Volume
       type: 0
       dropdownOptions: []
   - categoryName: Options
     categoryPrefab: {fileID: 2841469313223129833, guid: a820088144556894ebfb59c7371a54fc, type: 3}
     options:
-    - optionID: 0
+    - optionID: 100
       optionName: FPS Limit
       type: 1
       dropdownOptions: []
-    - optionID: 0
+    - optionID: 101
       optionName: V-Sync
       type: 2
       dropdownOptions:
       - Disabled
       - Enabled
-    - optionID: 0
+    - optionID: 102
       optionName: Anti-Aliasing
       type: 2
       dropdownOptions:

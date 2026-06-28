@@ -43,6 +43,11 @@ public class UIManager : MonoBehaviour
         }
     }
 
+    private void SetUp() {
+        
+
+    }
+
     private void SetBlur(bool active) {
         backgroundBlur.SetFloat("_BlurStrength", active ? 1.4f : 0f);
         backgroundBlur.SetFloat("_Darken", active ? .5f : 0f);

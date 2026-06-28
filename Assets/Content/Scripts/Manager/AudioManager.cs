@@ -21,8 +21,6 @@ public class AudioManager : MonoBehaviour
     private AudioClip previousClip;
     private Coroutine musicPlay;
 
-
-
     void Awake() {
         if (Instance != null && Instance != this) {
             Destroy(gameObject);
