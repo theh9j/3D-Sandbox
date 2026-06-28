@@ -12,4 +12,43 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1db8aea5c5f88c94f83a262cd1083b2f, type: 3}
   m_Name: Options
   m_EditorClassIdentifier: Assembly-CSharp::PreferencesType
-  categories: []
+  categories:
+  - categoryName: Audio
+    categoryPrefab: {fileID: 2841469313223129833, guid: a820088144556894ebfb59c7371a54fc, type: 3}
+    options:
+    - optionID: 0
+      optionName: Main Volume
+      type: 0
+      dropdownOptions: []
+    - optionID: 0
+      optionName: Music Volume
+      type: 0
+      dropdownOptions: []
+    - optionID: 0
+      optionName: SFX Volume
+      type: 0
+      dropdownOptions: []
+    - optionID: 0
+      optionName: Main  Volume
+      type: 0
+      dropdownOptions: []
+  - categoryName: Options
+    categoryPrefab: {fileID: 2841469313223129833, guid: a820088144556894ebfb59c7371a54fc, type: 3}
+    options:
+    - optionID: 0
+      optionName: FPS Limit
+      type: 1
+      dropdownOptions: []
+    - optionID: 0
+      optionName: V-Sync
+      type: 2
+      dropdownOptions:
+      - Disabled
+      - Enabled
+    - optionID: 0
+      optionName: Anti-Aliasing
+      type: 2
+      dropdownOptions:
+      - Disabled
+      - TAA
+      - MSAA

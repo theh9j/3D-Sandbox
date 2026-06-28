@@ -12,4 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 83a714789d7ff3948ab9a92670561710, type: 3}
   m_Name: PreferencesPrefabs
   m_EditorClassIdentifier: Assembly-CSharp::PreferencesPrefabs
-  prefabs: []
+  prefabs:
+  - type: 0
+    prefab: {fileID: 8371586575447204127, guid: d3676404cb05a3c458ebfb571d139393, type: 3}
+  - type: 1
+    prefab: {fileID: 667731425595995779, guid: be5e662e41b11774a9d10a4b245d1d22, type: 3}
+  - type: 2
+    prefab: {fileID: 6582858389748302152, guid: 959d15042cc503b49b25def9cbf32999, type: 3}

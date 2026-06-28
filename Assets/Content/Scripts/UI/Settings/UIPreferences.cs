@@ -9,18 +9,16 @@ public partial class UISettings : MonoBehaviour
     [Header("Preferences")]
     [SerializeField] private GameObject preferenceSettings;
     [SerializeField] private ScrollRect scrollRect;
+    [SerializeField] private RectTransform viewPort;
+    [SerializeField] private Transform contentBox;
 
     [Header("Preferences Layout")]
     [SerializeField] private PreferencesType database;
     [SerializeField] private PreferencesPrefabs registry;
-    [SerializeField] private Transform contentBox;
-
-
-    [Header("Option Preferences")]
 
     private readonly Dictionary<string, GameObject> builtCategories = new();
     private readonly Dictionary<OptionIDs, UIOptions> builtOptions = new();
-    private List<UIOptions> optionList;
+
     private Transform preferencesTrans;
     private Tween prefTween;
 
@@ -32,7 +30,6 @@ public partial class UISettings : MonoBehaviour
             .From(GetBottomPos())
             .SetEase(Ease.OutBack, 2f)
             .OnStart(() => {
-                optionList = Build();
                 SetActivityPref(true);
             })
             .OnKill(() => { prefTween = null; });
@@ -59,9 +56,8 @@ public partial class UISettings : MonoBehaviour
         if (active) ResetScroll(scrollRect);
     }
 
-    public List<UIOptions> Build() {
-        optionList = new();
-        List<UIOptions> result = new();
+    public Dictionary<OptionIDs, UIOptions> Build() {
+        Dictionary<OptionIDs, UIOptions> result = new();
 
         HashSet<string> validCategories = new();
         HashSet<OptionIDs> validOptions = new();
@@ -70,27 +66,29 @@ public partial class UISettings : MonoBehaviour
             validCategories.Add(category.categoryName);
 
             if (!builtCategories.TryGetValue(category.categoryName, out GameObject categoryObj)) {
-                categoryObj = Instantiate(category.categoryPrefab, contentBox);
+                categoryObj = Instantiate(category.categoryPrefab, contentBox, false);
                 categoryObj.name = category.categoryName;
                 categoryObj.GetComponent<UICategory>().Init(category.categoryName);
                 builtCategories.Add(category.categoryName, categoryObj);
             }
 
-            Transform optionsParent = categoryObj.transform;
+            Transform optionsParent = categoryObj.transform.Find("OptionsParent");
 
             foreach (SettingsOption option in category.options) {
                 validOptions.Add(option.optionID);
 
                 if (!builtOptions.TryGetValue(option.optionID, out UIOptions optionUI)) {
                     GameObject prefab = registry.GetPrefab(option.type);
-                    GameObject optionObj = Instantiate(prefab, optionsParent);
+                    GameObject optionObj = Instantiate(prefab, optionsParent, false);
+
                     optionObj.name = option.optionName;
                     optionUI = optionObj.GetComponent<UIOptions>();
                     builtOptions.Add(option.optionID, optionUI);
                 }
 
+                if (optionUI is UIDropdown dropdown) dropdown.AssignViewport(viewPort);
                 optionUI.Init(option);
-                result.Add(optionUI);
+                result[option.optionID] = optionUI;
             }
         }
 
@@ -110,8 +108,6 @@ public partial class UISettings : MonoBehaviour
 
         return result;
     }
-
-
 
     //HELPERS
 

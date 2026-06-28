@@ -47,9 +47,10 @@ public enum OptionIDs {
     // Graphics
     FPSLimit = 100,
     VSync = 101,
-    FOV = 102,
+    AntiAliasing = 102,
 
     // Controls
-    Sensitivity = 200,
-    SprintToggle = 201,
+    FOV = 200,
+    Sensitivity = 201,
+    SprintToggle = 202,
 }
