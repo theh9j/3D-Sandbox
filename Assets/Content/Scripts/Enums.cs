@@ -32,7 +32,24 @@ public enum AntiAliasing {
 }
 
 public enum OptionsType {
-    VSync,
-    AA,
+    SliderTypeA,
+    SliderTypeB,
+    Dropdown
+}
 
+public enum OptionIDs {
+    // Audio
+    MainVolume = 0,
+    MusicVolume = 1,
+    SFXVolume = 2,
+    EnvironmentVolume = 3,
+
+    // Graphics
+    FPSLimit = 100,
+    VSync = 101,
+    FOV = 102,
+
+    // Controls
+    Sensitivity = 200,
+    SprintToggle = 201,
 }
