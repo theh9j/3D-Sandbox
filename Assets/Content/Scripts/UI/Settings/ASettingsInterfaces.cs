@@ -192,7 +192,6 @@ public class ASettingsInterfaces : MonoBehaviour
                         List<string> interrupted = IsKeyUsed(newKey, waitingOption);
                         if (interrupted.Count > 0) {
                             keyUI.DisplayWarning($"Key already assigned to " + string.Join(", ", interrupted));
-                            //continue;
                         }
 
                         apply(newKey);

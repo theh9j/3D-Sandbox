@@ -4,6 +4,8 @@ public class WorldManager : MonoBehaviour
 {
     public static WorldManager Instance;
 
+    
+
     public float DepthLimit { get; private set; } = -20f;
 
 

@@ -25,6 +25,13 @@ public enum OptionsType {
     InputKey
 }
 
+public enum Weather {
+    Clear,
+    Sandstorm,
+    Eclipse,
+
+}
+
 public enum OptionIDs {
     // Audio
     MainVolume = 0,

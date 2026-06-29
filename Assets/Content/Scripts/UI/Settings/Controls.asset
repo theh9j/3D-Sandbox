@@ -12,4 +12,51 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1db8aea5c5f88c94f83a262cd1083b2f, type: 3}
   m_Name: Controls
   m_EditorClassIdentifier: Assembly-CSharp::PreferencesType
-  categories: []
+  categories:
+  - categoryName: Mouse
+    categoryPrefab: {fileID: 2841469313223129833, guid: a820088144556894ebfb59c7371a54fc, type: 3}
+    options:
+    - optionID: 200
+      optionName: FOV
+      type: 1
+      dropdownOptions: []
+    - optionID: 201
+      optionName: Sensitivity
+      type: 1
+      dropdownOptions: []
+  - categoryName: Keybinds
+    categoryPrefab: {fileID: 2841469313223129833, guid: a820088144556894ebfb59c7371a54fc, type: 3}
+    options:
+    - optionID: 203
+      optionName: Move Forward
+      type: 3
+      dropdownOptions: []
+    - optionID: 204
+      optionName: Move Backward
+      type: 3
+      dropdownOptions: []
+    - optionID: 205
+      optionName: Strafe Left
+      type: 3
+      dropdownOptions: []
+    - optionID: 206
+      optionName: Strafe Right
+      type: 3
+      dropdownOptions: []
+    - optionID: 208
+      optionName: Sprint
+      type: 3
+      dropdownOptions: []
+    - optionID: 207
+      optionName: Interact
+      type: 3
+      dropdownOptions: []
+  - categoryName: Toggles
+    categoryPrefab: {fileID: 2841469313223129833, guid: a820088144556894ebfb59c7371a54fc, type: 3}
+    options:
+    - optionID: 202
+      optionName: Sprint Toggle
+      type: 2
+      dropdownOptions:
+      - Disable
+      - Enable

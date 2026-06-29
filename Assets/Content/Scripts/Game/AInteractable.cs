@@ -5,7 +5,8 @@ using UnityEngine.UI;
 public abstract class AInteractable : MonoBehaviour
 {
     [SerializeField] private Outline outline;
-    [SerializeField] private readonly string baseHexColor = "#FFBF76";
+    [SerializeField] private string baseHexColor = "#FFBF76";
+    [SerializeField] private float outlineWidth = 10f;
     private Coroutine outlineFluctuation;
     public bool OnHover { get; private set; }
 
@@ -16,6 +17,7 @@ public abstract class AInteractable : MonoBehaviour
                 outline.OutlineColor = baseColor;
             outline.enabled = false;
             outline.OutlineMode = Outline.Mode.OutlineVisible;
+            outline.OutlineWidth = outlineWidth;
         }
     }
 
@@ -57,7 +59,4 @@ public abstract class AInteractable : MonoBehaviour
     }
 
     public abstract void Interact(PlayerController player);
-
-
-    
 }

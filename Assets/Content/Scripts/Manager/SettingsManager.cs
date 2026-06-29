@@ -14,8 +14,8 @@ public class SettingsManager : MonoBehaviour
     public int minFov = 60;
     public int maxFov = 120;
 
-    public float minSens = 0f;
-    public float maxSens = 1f;
+    public float minSens = 0.01f;
+    public float maxSens = 5f;
 
     public event Action<int> FovChanged;
     public event Action<float> SensChanged;

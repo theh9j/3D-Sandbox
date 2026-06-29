@@ -5,14 +5,12 @@ public class UIManager : MonoBehaviour
 {
     [SerializeField] private PlayerInteractor interact;
     [SerializeField] private GameObject settingsGameObject;
-    [SerializeField] private Material backgroundBlur;
     public event Func<bool> SettingToggles;
     public bool SettingOpen {  get; private set; }
     public UIState CurrentState { get; private set; }
 
     void Awake() {
         interact.openSettings += ToggleSettings;
-        SetBlur(false);
     }
 
     void Update() {
@@ -42,8 +40,8 @@ public class UIManager : MonoBehaviour
     }
 
     private void SetBlur(bool active) {
-        backgroundBlur.SetFloat("_BlurStrength", active ? 1.4f : 0f);
-        backgroundBlur.SetFloat("_Darken", active ? .5f : 0f);
+        if (BlurShader.Instance == null) return;
+        BlurShader.Instance.Enabled = active;
     }
 
     public void ToggleSettings() {
