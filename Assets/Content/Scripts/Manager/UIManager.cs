@@ -1,8 +1,6 @@
 using System;
 using UnityEngine;
 
-
-
 public class UIManager : MonoBehaviour
 {
     [SerializeField] private PlayerInteractor interact;
@@ -41,11 +39,6 @@ public class UIManager : MonoBehaviour
                 Time.timeScale = 0f;
                 break;
         }
-    }
-
-    private void SetUp() {
-        
-
     }
 
     private void SetBlur(bool active) {

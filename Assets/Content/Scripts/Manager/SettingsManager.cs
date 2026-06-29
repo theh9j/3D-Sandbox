@@ -1,10 +1,24 @@
+using System;
 using System.Collections;
+using System.ComponentModel;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
 
 public class SettingsManager : MonoBehaviour
 {
-    public static SettingsManager Instance; 
+    public static SettingsManager Instance;
+
+    public int minFps = 30;
+    public int maxFps = 241;
+
+    public int minFov = 60;
+    public int maxFov = 120;
+
+    public float minSens = 0f;
+    public float maxSens = 1f;
+
+    public event Action<int> FovChanged;
+    public event Action<float> SensChanged;
 
     void Awake() {
         if (Instance != null && Instance != this) {
@@ -39,16 +53,24 @@ public class SettingsManager : MonoBehaviour
         SaveManager.Instance.vsync = active;
     }
 
-    public void SetAntiAlias(string type) {
+    public void UpdateFOV(int fov) {
+        FovChanged.Invoke(fov);
+    }
+
+    public void UpdateSens(float sens) {
+        SensChanged.Invoke(sens);
+    }
+
+    public void SetAntiAlias(int type) {
         UniversalAdditionalCameraData camData = Camera.main.GetComponent<UniversalAdditionalCameraData>();
         switch (type) {
-            case "Disabled":
+            case 0:
                 camData.antialiasing = AntialiasingMode.None;
                 break;
-            case "TAA":
+            case 1:
                 camData.antialiasing = AntialiasingMode.TemporalAntiAliasing;
                 break;
-            case "SMAA":
+            case 2:
                 camData.antialiasing = AntialiasingMode.SubpixelMorphologicalAntiAliasing;
                 break;
             default:

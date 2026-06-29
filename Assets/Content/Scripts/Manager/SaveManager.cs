@@ -1,4 +1,6 @@
+using NUnit.Framework;
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -14,7 +16,7 @@ public class SaveManager : MonoBehaviour
     //Settings
     [HideInInspector] public int fps;
     [HideInInspector] public bool vsync;
-    [HideInInspector] public string antiAlias;
+    [HideInInspector] public int antiAlias;
 
     //Camera
     [HideInInspector] public float sensitivity;
@@ -22,6 +24,10 @@ public class SaveManager : MonoBehaviour
 
     [HideInInspector] public bool sprintToggle;
 
+    [HideInInspector] public Key moveFW;
+    [HideInInspector] public Key moveBW;
+    [HideInInspector] public Key moveL;
+    [HideInInspector] public Key moveR;
     [HideInInspector] public Key interact;
     [HideInInspector] public Key sprint;
 
@@ -55,7 +61,7 @@ public class SaveManager : MonoBehaviour
 
         fps = PlayerPrefs.GetInt("FPS", 60);
         vsync = PlayerPrefs.GetInt("VSync", 1) == 1;
-        antiAlias = PlayerPrefs.GetString("AntiAliasing", "Disabled");
+        antiAlias = PlayerPrefs.GetInt("AntiAliasing", 0);
 
         sensitivity = PlayerPrefs.GetFloat("Sensitivity", .15f);
         fov = PlayerPrefs.GetFloat("FOV", 70f);
@@ -64,6 +70,11 @@ public class SaveManager : MonoBehaviour
 
         interact = GetKeybind(Key.E, "Interact");
         sprint = GetKeybind(Key.LeftShift, "Sprint");
+
+        moveFW = GetKeybind(Key.W, "Foward");
+        moveBW = GetKeybind(Key.S, "Backward");
+        moveL = GetKeybind(Key.A, "Left");
+        moveR = GetKeybind(Key.D, "Right");
 
         mainVolume = PlayerPrefs.GetFloat("MainVolume", 1f);
         musicVolume = PlayerPrefs.GetFloat("MusicVolume", 1f);
@@ -88,9 +99,9 @@ public class SaveManager : MonoBehaviour
         //SETTINGS
         PlayerPrefs.SetInt("FPS", fps);
         PlayerPrefs.SetInt("VSync", vsync ? 1 : 0);
-        PlayerPrefs.SetString("AntiAliasing", antiAlias);
+        PlayerPrefs.SetInt("AntiAliasing", antiAlias);
 
-        //KEYSETTINGS
+        //CONTROLS
         PlayerPrefs.SetFloat("Sensitivity", sensitivity);
         PlayerPrefs.SetFloat("FOV", fov);
 
@@ -98,6 +109,11 @@ public class SaveManager : MonoBehaviour
 
         PlayerPrefs.SetString("Interact", interact.ToString());
         PlayerPrefs.SetString("Sprint", sprint.ToString());
+
+        PlayerPrefs.SetString("Forward", moveFW.ToString());
+        PlayerPrefs.SetString("Backward", moveBW.ToString());
+        PlayerPrefs.SetString("Left", moveL.ToString());
+        PlayerPrefs.SetString("Right", moveR.ToString());
 
         //AUDIO
         PlayerPrefs.SetFloat("MainVolume", mainVolume);
@@ -130,7 +146,7 @@ public class SaveManager : MonoBehaviour
 
         fps = 60;
         vsync = false;
-        antiAlias = "Disabled";
+        antiAlias = 0;
         sensitivity = .15f;
         fov = 70f;
 
@@ -143,9 +159,12 @@ public class SaveManager : MonoBehaviour
     }
 
     private void FirstLaunchKB() {
+        moveFW = Key.W;
+        moveBW = Key.S;
+        moveL = Key.A;
+        moveR = Key.D;
+
         interact = Key.E;
         sprint = Key.LeftShift;
     }
-
-    
 }

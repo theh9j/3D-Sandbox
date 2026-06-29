@@ -21,5 +21,6 @@ public class SettingsOption {
     public string optionName;
     public OptionsType type;
 
+    [Header("IGNORE UNLESS MATCH SPECIFIED OPTION")]
     public List<string> dropdownOptions;
 }

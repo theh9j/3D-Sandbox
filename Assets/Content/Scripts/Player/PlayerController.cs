@@ -56,14 +56,15 @@ public class PlayerController : MonoBehaviour
     }
 
     void Update() {
+
+        if (cam != null) {
+            cam.fieldOfView = fov;
+        }
+
         if (interactor.InputLocked) return;
 
         if (WorldManager.Instance != null && transform.position.y < WorldManager.Instance.DepthLimit) {
             Respawn();
-        }
-
-        if (cam != null) {
-            cam.fieldOfView = fov;
         }
 
         CheckMode();
@@ -80,11 +81,17 @@ public class PlayerController : MonoBehaviour
     }
 
     private IEnumerator OnLaunch() {
-        yield return new WaitUntil(() => SaveManager.Instance != null && SaveManager.Instance.init);
-        if (SaveManager.Instance != null) {
-            sensitivity = SaveManager.Instance.sensitivity;
-            fov = SaveManager.Instance.fov;
-        }
+        yield return new WaitUntil(() => SettingsManager.Instance != null);
+        SettingsManager.Instance.FovChanged += UpdateFOV;
+        SettingsManager.Instance.SensChanged += UpdateSensitivity;
+    }
+
+    public void UpdateFOV(int fov) {
+        this.fov = fov;
+    }
+
+    public void UpdateSensitivity(float sensitivity) {
+        this.sensitivity = sensitivity;
     }
 
     void FixedUpdate() {

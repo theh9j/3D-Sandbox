@@ -18,23 +18,11 @@ public enum UIState {
     Pause,
 }
 
-public enum AudioType {
-    Main,
-    Music,
-    SFX,
-    Environment
-}
-
-public enum AntiAliasing {
-    Disabled,
-    MSAA,
-    FXAA
-}
-
 public enum OptionsType {
     SliderTypeA,
     SliderTypeB,
-    Dropdown
+    Dropdown,
+    InputKey
 }
 
 public enum OptionIDs {
@@ -53,4 +41,13 @@ public enum OptionIDs {
     FOV = 200,
     Sensitivity = 201,
     SprintToggle = 202,
+
+    //Keybinds
+    MoveFW,
+    MoveBW,
+    MoveL,
+    MoveR,
+
+    Interact,
+    Sprint,
 }

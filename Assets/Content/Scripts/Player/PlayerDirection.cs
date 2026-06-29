@@ -68,8 +68,8 @@ public class PlayerDirection : MonoBehaviour
 
     private void Movement() {
         Move = Keyboard.current == null ? Vector2.zero : new Vector2(
-            GetKey(Key.A, Key.D),
-            GetKey(Key.S, Key.W)
+            GetKey(SaveManager.Instance.moveL, SaveManager.Instance.moveR),
+            GetKey(SaveManager.Instance.moveBW, SaveManager.Instance.moveFW)
             );
 
         Jump = Keyboard.current != null && Keyboard.current.spaceKey.wasPressedThisFrame;

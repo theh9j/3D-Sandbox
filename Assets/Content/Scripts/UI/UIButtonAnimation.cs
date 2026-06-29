@@ -1,8 +1,6 @@
 using DG.Tweening;
-using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.UIElements;
 
 public class UIButtonAnimation :
     MonoBehaviour,
@@ -11,8 +9,6 @@ public class UIButtonAnimation :
     IPointerExitHandler {
 
     [SerializeField] private RectTransform face;
-    [SerializeField] private TMP_Text front;
-    [SerializeField] private TMP_Text back;
 
     [SerializeField] private Vector2 releasedPos;
     [SerializeField] private Vector2 hoverPos;
@@ -46,11 +42,6 @@ public class UIButtonAnimation :
 
     public void OnPointerUp(PointerEventData eventData) {
         AnimateTo(hovering ? hoverPos : releasedPos);
-    }
-
-    public void SetText(string text) {
-        front.text = text;
-        back.text = text;
     }
 
     private void AnimateTo(Vector2 target) {
