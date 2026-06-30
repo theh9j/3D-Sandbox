@@ -28,8 +28,12 @@ public enum OptionsType {
 public enum Weather {
     Clear,
     Sandstorm,
-    Eclipse,
-
+    Windy,
+    Heatwave,
+    Night,
+    Dusty,
+    Bloodmoon,
+    Randomize
 }
 
 public enum OptionIDs {

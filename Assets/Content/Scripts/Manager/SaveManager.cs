@@ -20,7 +20,7 @@ public class SaveManager : MonoBehaviour
 
     //Camera
     [HideInInspector] public float sensitivity;
-    [HideInInspector] public float fov;
+    [HideInInspector] public int fov;
 
     [HideInInspector] public bool sprintToggle;
 
@@ -63,8 +63,8 @@ public class SaveManager : MonoBehaviour
         vsync = PlayerPrefs.GetInt("VSync", 1) == 1;
         antiAlias = PlayerPrefs.GetInt("AntiAliasing", 0);
 
-        sensitivity = PlayerPrefs.GetFloat("Sensitivity", .15f);
-        fov = PlayerPrefs.GetFloat("FOV", 70f);
+        sensitivity = PlayerPrefs.GetFloat("Sensitivity", 1.5f);
+        fov = PlayerPrefs.GetInt("FOV", 70);
 
         sprintToggle = PlayerPrefs.GetInt("SprintToggle", 0) == 1;
 
@@ -103,7 +103,7 @@ public class SaveManager : MonoBehaviour
 
         //CONTROLS
         PlayerPrefs.SetFloat("Sensitivity", sensitivity);
-        PlayerPrefs.SetFloat("FOV", fov);
+        PlayerPrefs.SetInt("FOV", fov);
 
         PlayerPrefs.SetInt("SprintToggle", sprintToggle ? 1 : 0);
 
@@ -147,8 +147,8 @@ public class SaveManager : MonoBehaviour
         fps = 60;
         vsync = false;
         antiAlias = 0;
-        sensitivity = .15f;
-        fov = 70f;
+        sensitivity = 1.5f;
+        fov = 70;
 
         sprintToggle = false;
 

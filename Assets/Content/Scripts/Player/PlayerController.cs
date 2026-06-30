@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
+    [SerializeField] private EnvironmentManager env;
     [SerializeField] private PlayerDirection direction;
     [SerializeField] private PlayerInteractor interactor;
     [SerializeField] private PlayerHealth health;
@@ -44,6 +45,7 @@ public class PlayerController : MonoBehaviour
 
         rb.freezeRotation = true;
         rb.interpolation = RigidbodyInterpolation.Interpolate;
+        env.visibilityFluct += OnVisibilityChange;
     }
 
     void Start() {
@@ -84,6 +86,10 @@ public class PlayerController : MonoBehaviour
         yield return new WaitUntil(() => SettingsManager.Instance != null);
         SettingsManager.Instance.FovChanged += UpdateFOV;
         SettingsManager.Instance.SensChanged += UpdateSensitivity;
+
+        yield return new WaitUntil(() => SaveManager.Instance != null);
+        fov = SaveManager.Instance.fov;
+        sensitivity = SaveManager.Instance.sensitivity;
     }
 
     public void UpdateFOV(int fov) {
@@ -92,6 +98,10 @@ public class PlayerController : MonoBehaviour
 
     public void UpdateSensitivity(float sensitivity) {
         this.sensitivity = sensitivity;
+    }
+
+    private void OnVisibilityChange(float visibility) {
+        cam.farClipPlane = visibility;
     }
 
     void FixedUpdate() {
@@ -107,14 +117,6 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    public void ChangeSensitivity(float sensitivity) {
-        this.sensitivity = sensitivity;
-    }
-
-    public void ChangeFOV(float fov) {
-        this.fov = fov;
-    }
-
     public bool ChangeMode(string mode) {
         if (!Enum.TryParse(mode, out Modes newMode)) return false;
         return ChangeMode(newMode);
@@ -123,7 +125,7 @@ public class PlayerController : MonoBehaviour
     //-------- NORMAL MODE -----------
 
     private void NormalLook() {
-        Vector2 look = direction.LookDelta * sensitivity;
+        Vector2 look = direction.LookDelta * sensitivity * .1f;
 
         yaw += look.x;
         pitch -= look.y;
@@ -226,6 +228,6 @@ public class PlayerController : MonoBehaviour
         return true;
     }
     private bool IsGrounded() {
-        return Physics.Raycast(transform.position, Vector3.down, groundDist, groundMask);
+        return Physics.Raycast(transform.position, Vector3.down, groundDist);
     }
 }
