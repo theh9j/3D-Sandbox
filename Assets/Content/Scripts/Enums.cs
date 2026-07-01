@@ -37,6 +37,11 @@ public enum Weather {
     Randomize
 }
 
+public enum SpawnType {
+    Inside,
+    Outdoor
+}
+
 public enum OptionIDs {
     // Audio
     MainVolume = 0,
@@ -64,4 +69,14 @@ public enum OptionIDs {
     Sprint,
 
     ResetKeys
+}
+
+public enum Events {
+    DirtyFloor,
+    EShortage,
+    WShortage,
+    NetworkDown,
+    Tornado,
+    Rob,
+    Fire
 }

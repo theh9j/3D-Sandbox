@@ -5,24 +5,40 @@ using UnityEngine;
 
 public class PlayerHealth : MonoBehaviour
 {
-    [SerializeField] PlayerDirection direction;
-    [SerializeField] PlayerController controller;
+    [SerializeField] private PlayerDirection direction;
 
     [Header("Stamina Settings")] //PROBABLY NEED BALANCING
-    [SerializeField] private float maxStamina = 100f;
+    [SerializeField] private float maxEnergy = 100f;
     [SerializeField] private float walkDrainRate = .2f;
     [SerializeField] private float sprintDrainRate = .8f;
+    public float MaxEnergy => maxEnergy;
+    public float Energy { get; private set; }
+
+    [Header("Thirst Settings")]
+    [SerializeField] private float maxThirst = 100f;
+    [SerializeField] private float thirstDrainRate = .1f;
+    public float MaxThirst => maxThirst;
+    public float Thirst { get; private set; }
+    public float ThirstMultiplier { get; set; } = 1f;
+
+    [Header("Heatlh Settings")]
+    [SerializeField] private float maxHealth = 100f;
+    [SerializeField] private float healthRegenRate = 1f;
+    [SerializeField] private float healthPoint;
+    [SerializeField] private float damageThreshold = 10f;
+    private float healthRegenCooldown = 0f;
+
 
     //EVENTS
-    public event Action<float, float> OnStaminaChanged;
+    public event Action<float, float> OnEnergyChanged;
+    public event Action<float, float> OnThirstChanged;
+    public event Action<bool> OnDown;
 
-    public float MaxStamina { get; private set; }
-    public float Stamina { get; private set; }
-    public bool CanSprint => Stamina > 0f;
+    
+    public bool CanSprint => Energy > 0f;
 
     void Awake() {
-        MaxStamina = maxStamina;
-        Stamina = MaxStamina;
+        NewDay();
     }
 
     void Start() {
@@ -33,11 +49,11 @@ public class PlayerHealth : MonoBehaviour
         yield return new WaitUntil(() =>
             SaveManager.Instance != null && SaveManager.Instance.init
         );
-        float loadedStamina = SaveManager.Instance.stamina == 999f
-            ? MaxStamina
-            : SaveManager.Instance.stamina;
+        float loadedThirst = SaveManager.Instance.thirst == 999f
+            ? MaxThirst
+            : SaveManager.Instance.thirst;
 
-        SetStamina(loadedStamina);
+        SetThirst(loadedThirst);
     }
 
     void Update() {
@@ -45,26 +61,91 @@ public class PlayerHealth : MonoBehaviour
         bool wantsSprint = direction.Sprint;
         bool isSprinting = wantsSprint && isMoving && CanSprint;
 
+        SetThirst(Thirst - thirstDrainRate * ThirstMultiplier * Time.deltaTime);
+
         if (isSprinting) {
-            SetStamina(Stamina - sprintDrainRate * Time.deltaTime);
+            SetEnergy(Energy - sprintDrainRate * Time.deltaTime);
         } else if (isMoving) {
-            SetStamina(Stamina - walkDrainRate * Time.deltaTime);
+            SetEnergy(Energy - walkDrainRate * Time.deltaTime);
         }
+
+
+        if (healthRegenCooldown <= 0 && healthPoint < maxHealth) Regeneration();
     }
 
-    private void SetStamina(float value) {
-        value = Mathf.Clamp(value, 0f, MaxStamina);
+    public void NewDay() {
+        SetEnergy(MaxEnergy);
+    }
 
-        if (Mathf.Approximately(value, Stamina)) {
+    //-------- STAMINA MANAGEMENT -----------
+
+    private void SetEnergy(float value) {
+        value = Mathf.Clamp(value, 0f, MaxEnergy);
+
+        if (Mathf.Approximately(value, Energy)) {
             return;
         }
-        if (SaveManager.Instance != null) 
-            SaveManager.Instance.stamina = value;
-        Stamina = value;
-        OnStaminaChanged?.Invoke(Stamina, MaxStamina);
+
+        Energy = value;
+        OnEnergyChanged?.Invoke(Energy, MaxEnergy);
     }
 
     public void StaminaRestore(float value) {
-        SetStamina(Stamina + value);
+        SetEnergy(Energy + value);
     }
+
+    //-------- THIRST MANAGEMENT -----------
+
+    public void Hydrate(float value) {
+        SetThirst(Thirst + value);
+    }
+
+    private void SetThirst(float value) {
+        value = Mathf.Clamp(value, 0f, MaxThirst);
+
+        if (Mathf.Approximately(value, Thirst)) {
+            return;
+        }
+
+        if (SaveManager.Instance != null)
+            SaveManager.Instance.thirst = value;
+
+        Thirst = value;
+        OnThirstChanged?.Invoke(Thirst, MaxThirst);
+    }
+
+
+    //-------- DEATH MANAGEMENT -----------
+
+    private void Down() {
+        Debug.Log("Player is down!");
+        OnDown?.Invoke(true);
+
+
+    }
+
+    private void OnCollisionEnter(Collision collision) {
+        EvaluateImpact(collision.relativeVelocity.magnitude);
+    }
+
+    private void OnDamaged(float damage) {
+        healthRegenCooldown += 20f;
+        healthPoint -= damage;
+        if (healthPoint <= 0) {
+            healthPoint = 0;
+            Down();
+        }
+    }
+
+    private void Regeneration() {
+        healthPoint += healthRegenRate;
+        if (Mathf.Approximately(healthPoint, maxHealth) || healthPoint > maxHealth) healthPoint = maxHealth;
+    }
+
+    private void EvaluateImpact(float speed) {
+        if (speed < damageThreshold) return;
+        float damage = (speed - damageThreshold) * 20f;
+        OnDamaged(damage);
+    }
+
 }

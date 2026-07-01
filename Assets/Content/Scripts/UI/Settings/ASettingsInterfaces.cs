@@ -158,6 +158,7 @@ public class ASettingsInterfaces : MonoBehaviour
 
         keyUI.KeyInput.onClick.AddListener(() =>
         {
+            if (WaitingForKey) return;
             WaitingForKey = true;
             waitingOption = id;
             Key prev = keyUI.TextToKey();
@@ -170,7 +171,7 @@ public class ASettingsInterfaces : MonoBehaviour
 
     protected void KeyReset(OptionIDs id, Action apply) {
         if (!optionList.TryGetValue(id, out UIOptions option)) return;
-        if (option is not UIResetKeys reset) return;
+        if (option is not UIResetKeys reset) return;    
 
         reset.ResetKey.onClick.RemoveAllListeners();
 

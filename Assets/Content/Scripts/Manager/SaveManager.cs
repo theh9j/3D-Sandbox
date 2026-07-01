@@ -11,7 +11,7 @@ public class SaveManager : MonoBehaviour
     [SerializeField] private bool resetData = false;
 
     //Player
-    [HideInInspector] public float stamina; //Stamina == 999 -> Reset to Max
+    [HideInInspector] public float thirst; //Thirst == 999 -> Reset to Max
 
     //Settings
     [HideInInspector] public int fps;
@@ -56,8 +56,7 @@ public class SaveManager : MonoBehaviour
             init = true;
             return;
         }
-
-        stamina = PlayerPrefs.GetFloat("Stamina", 999f);
+        thirst = PlayerPrefs.GetFloat("Thirst", 999f);
 
         fps = PlayerPrefs.GetInt("FPS", 60);
         vsync = PlayerPrefs.GetInt("VSync", 1) == 1;
@@ -94,7 +93,7 @@ public class SaveManager : MonoBehaviour
 
     private void Save() {
         //PLAYER
-        PlayerPrefs.SetFloat("Stamina", stamina);
+        PlayerPrefs.SetFloat("Thirst", thirst);
 
         //SETTINGS
         PlayerPrefs.SetInt("FPS", fps);
@@ -142,7 +141,7 @@ public class SaveManager : MonoBehaviour
     }
 
     private void FirstLaunchGeneric() {
-        stamina = 999f;
+        thirst = 999f;
 
         fps = 60;
         vsync = false;

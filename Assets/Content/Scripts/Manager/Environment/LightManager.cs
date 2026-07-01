@@ -60,6 +60,7 @@ public class LightManager : MonoBehaviour
     private void DebugResetTimeTest() {
         if (Keyboard.current != null && Keyboard.current.tabKey.wasPressedThisFrame) {
             TimeOfDay = .25f;
+            EnvironmentManager.Instance?.ChangeWeather();
             timeFlow = true;
         }
     }

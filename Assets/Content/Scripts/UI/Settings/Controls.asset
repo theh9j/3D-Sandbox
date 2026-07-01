@@ -51,6 +51,10 @@ MonoBehaviour:
       optionName: Interact
       type: 3
       dropdownOptions: []
+    - optionID: 209
+      optionName: Reset Keybinds
+      type: 4
+      dropdownOptions: []
   - categoryName: Toggles
     categoryPrefab: {fileID: 2841469313223129833, guid: a820088144556894ebfb59c7371a54fc, type: 3}
     options:
