@@ -12,20 +12,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5e6f1dc7e18575c449ba24855ef4391d, type: 3}
   m_Name: Night
   m_EditorClassIdentifier: Assembly-CSharp::WeatherTypes
-  weatherType: 0
-  weatherWeight: 0
-  possibleStartTime: 0
+  weatherType: 4
+  weatherWeight: 100
+  minWindow: 0.7
+  maxWindow: 1
   fog:
-    fogDensity: 0
-    fogColor: {r: 0, g: 0, b: 0, a: 0}
+    fogDensity: 0.05
+    fogColor: {r: 0.22352941, g: 0.27450982, b: 0.36078432, a: 0}
   lighting:
-    sunSize: 0.035
-    sunConvergenceSize: 1
-    exposure: 1
+    sunSize: 0.06
+    sunConvergenceSize: 0.5
+    exposure: 0.3
   envSFX:
-    visbility: 0
-    windStrength: 0
-    dustEmissionRate: 0
-    maxDust: 0
-    ambientSFX: {fileID: 0}
-    ambientVolume: 0
+    visbility: 180
+    windStrength: 0.3
+    dustEmissionRate: 300
+    maxDust: 800
+    ambientSFX: {fileID: 8300000, guid: ec45659d9348a4740a19a799ed0ddfbf, type: 3}
+    ambientVolume: 0.3

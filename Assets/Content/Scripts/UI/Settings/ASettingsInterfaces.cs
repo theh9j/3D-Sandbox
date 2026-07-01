@@ -25,7 +25,7 @@ public class ASettingsInterfaces : MonoBehaviour
     private readonly Dictionary<OptionIDs, UIOptions> builtOptions = new();
     private readonly Dictionary<OptionIDs, string> keybindName = new();
     private readonly Dictionary<OptionIDs, Key> keybinds = new();
-
+    private readonly Dictionary<OptionIDs, UIInputKey> keyFunc = new();
     protected Dictionary<OptionIDs, UIOptions> optionList;
 
     protected Dictionary<OptionIDs, UIOptions> Build() {
@@ -58,7 +58,10 @@ public class ASettingsInterfaces : MonoBehaviour
                     builtOptions.Add(option.optionID, optionUI);
                 }
 
-                if (optionUI is UIInputKey) keybindName[option.optionID] = option.optionName;
+                if (optionUI is UIInputKey) { 
+                    keybindName[option.optionID] = option.optionName;
+                    keyFunc[option.optionID] = optionUI as UIInputKey;
+                }
                 if (optionUI is UIDropdown dropdown) dropdown.AssignViewport(viewPort);
                 optionUI.Init(option);
                 result[option.optionID] = optionUI;
@@ -133,11 +136,6 @@ public class ASettingsInterfaces : MonoBehaviour
         });
     }
 
-    protected void SetSliderBValue(UISliderTypeB sliderUI, float value, Func<float, string> textFormat) {
-        sliderUI.Slider.SetValueWithoutNotify(value);
-        sliderUI.Input.SetTextWithoutNotify(textFormat(value));
-    }
-
     protected void Dropdown(OptionIDs id, int value, Action<int> apply) {
         if (!optionList.TryGetValue(id, out UIOptions option)) return;
         if (option is not UIDropdown dropdown) return;
@@ -170,6 +168,25 @@ public class ASettingsInterfaces : MonoBehaviour
         });
     }
 
+    protected void KeyReset(OptionIDs id, Action apply) {
+        if (!optionList.TryGetValue(id, out UIOptions option)) return;
+        if (option is not UIResetKeys reset) return;
+
+        reset.ResetKey.onClick.RemoveAllListeners();
+
+        reset.ResetKey.onClick.AddListener(() => {
+            apply();
+        });
+    }
+
+
+    // INDIVIDUAL HELPERS
+
+    private void SetSliderBValue(UISliderTypeB sliderUI, float value, Func<float, string> textFormat) {
+        sliderUI.Slider.SetValueWithoutNotify(value);
+        sliderUI.Input.SetTextWithoutNotify(textFormat(value));
+    }
+
     private IEnumerator WaitForKey(UIInputKey keyUI, Action<Key> apply, Key originalKey) {
         yield return null;
 
@@ -189,14 +206,10 @@ public class ASettingsInterfaces : MonoBehaviour
                             yield break;
                         }
 
-                        List<string> interrupted = IsKeyUsed(newKey, waitingOption);
-                        if (interrupted.Count > 0) {
-                            keyUI.DisplayWarning($"Key already assigned to " + string.Join(", ", interrupted));
-                        }
-
                         apply(newKey);
                         keyUI.ChangeKeyVisible(newKey.ToString());
                         RefreshKeybinds();
+                        RefreshKeyMatches();
                         WaitingForKey = false;
                         yield break;
                     }
@@ -207,13 +220,26 @@ public class ASettingsInterfaces : MonoBehaviour
         }
     }
 
-    private List<string> IsKeyUsed(Key key, OptionIDs currentOption) {
-        string missing = "Key Missing";
+    protected void RefreshKeyMatches() {
+        Dictionary<Key, List<OptionIDs>> sharedKeys = new();
 
-        return keybinds
-            .Where(pair => pair.Key != currentOption && pair.Value == key)
-            .Select(pair => keybindName.GetValueOrDefault(pair.Key, missing))
-            .ToList();
+        foreach (var (key, value) in keybinds) {
+            if (!sharedKeys.ContainsKey(value)) sharedKeys[value] = new();
+            sharedKeys[value].Add(key);
+        }
+
+        foreach (var (id, ui) in keyFunc) {
+            if (!keybinds.TryGetValue(id, out Key key)) continue;
+
+            if (sharedKeys[key].Count <= 1) {
+                ui.DisplayWarning("");
+
+            } else {
+                ui.DisplayWarning("Keybind already assigned to " + string.Join(", ", sharedKeys[key]
+                    .Where(x => x != id)
+                    .Select(x => keybindName[x])));
+            }
+        }
     }
 
     private void RefreshKeybinds() {
@@ -225,4 +251,5 @@ public class ASettingsInterfaces : MonoBehaviour
         keybinds[OptionIDs.Interact] = SaveManager.Instance.interact;
         keybinds[OptionIDs.Sprint] = SaveManager.Instance.sprint;
     }
+
 }

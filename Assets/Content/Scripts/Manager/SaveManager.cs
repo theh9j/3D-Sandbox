@@ -158,7 +158,7 @@ public class SaveManager : MonoBehaviour
         enviromentVolume = 1f;
     }
 
-    private void FirstLaunchKB() {
+    public void FirstLaunchKB() {
         moveFW = Key.W;
         moveBW = Key.S;
         moveL = Key.A;

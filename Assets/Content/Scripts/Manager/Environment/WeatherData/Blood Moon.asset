@@ -12,21 +12,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5e6f1dc7e18575c449ba24855ef4391d, type: 3}
   m_Name: Blood Moon
   m_EditorClassIdentifier: Assembly-CSharp::WeatherTypes
-  weatherType: 0
-  weatherWeight: 0
-  minWindow: 0
-  maxWindow: 0
+  weatherType: 6
+  weatherWeight: 1
+  minWindow: 0.7
+  maxWindow: 1
   fog:
-    fogDensity: 0
-    fogColor: {r: 0, g: 0, b: 0, a: 0}
+    fogDensity: 0.015
+    fogColor: {r: 1, g: 0.23073666, b: 0.1603772, a: 0}
   lighting:
-    sunSize: 0.035
-    sunConvergenceSize: 1
-    exposure: 1
+    sunSize: 0.08
+    sunConvergenceSize: 0.5
+    exposure: 0.3
   envSFX:
-    visbility: 0
-    windStrength: 0
-    dustEmissionRate: 0
-    maxDust: 0
+    visbility: 40
+    windStrength: 4
+    dustEmissionRate: 7000
+    maxDust: 12000
     ambientSFX: {fileID: 0}
     ambientVolume: 0

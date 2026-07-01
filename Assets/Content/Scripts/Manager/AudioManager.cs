@@ -156,8 +156,8 @@ public class AudioManager : MonoBehaviour {
 
         environmentSequence = DOTween.Sequence();
 
-        environmentSequence.Append(currentEnvironment.DOFade(0f, 0.7f));
-        environmentSequence.Join(nextEnvironment.DOFade(FinalEnvironmentVolume, 0.7f));
+        environmentSequence.Append(currentEnvironment.DOFade(0f, 7f));
+        environmentSequence.Join(nextEnvironment.DOFade(FinalEnvironmentVolume, 7f));
 
         environmentSequence.OnComplete(() => {
             currentEnvironment.Stop();

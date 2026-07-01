@@ -22,7 +22,8 @@ public enum OptionsType {
     SliderTypeA,
     SliderTypeB,
     Dropdown,
-    InputKey
+    InputKey,
+    ResetKeys
 }
 
 public enum Weather {
@@ -61,4 +62,6 @@ public enum OptionIDs {
 
     Interact,
     Sprint,
+
+    ResetKeys
 }

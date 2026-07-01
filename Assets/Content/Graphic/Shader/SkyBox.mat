@@ -112,7 +112,7 @@ Material:
     - _DstBlend: 0
     - _DstBlendAlpha: 0
     - _EnvironmentReflections: 1
-    - _Exposure: 1.5
+    - _Exposure: 1.25
     - _GlossMapScale: 0
     - _Glossiness: 0
     - _GlossyReflections: 0
@@ -127,8 +127,8 @@ Material:
     - _SrcBlend: 1
     - _SrcBlendAlpha: 1
     - _SunDisk: 2
-    - _SunSize: 0.07
-    - _SunSizeConvergence: 1.5
+    - _SunSize: 0.035
+    - _SunSizeConvergence: 0.9
     - _Surface: 0
     - _WorkflowMode: 1
     - _XRMotionVectorsPass: 1

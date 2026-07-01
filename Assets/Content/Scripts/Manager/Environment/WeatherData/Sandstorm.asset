@@ -12,16 +12,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5e6f1dc7e18575c449ba24855ef4391d, type: 3}
   m_Name: Sandstorm
   m_EditorClassIdentifier: Assembly-CSharp::WeatherTypes
-  weatherType: 0
-  weatherWeight: 0
-  possibleStartTime: 0
+  weatherType: 1
+  weatherWeight: 900
+  minWindow: 0.25
+  maxWindow: 0.7
   fog:
-    fogDensity: 0
-    fogColor: {r: 0, g: 0, b: 0, a: 0}
+    fogDensity: 0.2
+    fogColor: {r: 0.7254902, g: 0.5882353, b: 0.3882353, a: 0}
   lighting:
-    sunIntensityMultiplier: 1
+    sunSize: 0.08
+    sunConvergenceSize: 0.25
+    exposure: 0.65
   envSFX:
-    windStrength: 0
-    dustEmissionRate: 0
-    ambientSFX: {fileID: 0}
-    ambientVolume: 0
+    visbility: 20
+    windStrength: 2
+    dustEmissionRate: 4000
+    maxDust: 10000
+    ambientSFX: {fileID: 8300000, guid: 7974efede6970474c9bdaf476531f923, type: 3}
+    ambientVolume: 1

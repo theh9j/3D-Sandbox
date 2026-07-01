@@ -12,13 +12,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5e6f1dc7e18575c449ba24855ef4391d, type: 3}
   m_Name: Clear
   m_EditorClassIdentifier: Assembly-CSharp::WeatherTypes
-  weatherName: 
-  fogDensity: 0
-  fogColor: {r: 0, g: 0, b: 0, a: 0}
-  sunIntensityMultiplier: 1
-  sunColor: {r: 1, g: 1, b: 1, a: 1}
-  windStrength: 0
-  dust: {fileID: 0}
-  dustEmissionRate: 0
-  ambientLoop: {fileID: 0}
-  ambientVolume: 0
+  weatherType: 0
+  weatherWeight: 5000
+  minWindow: 0
+  maxWindow: 0.7
+  fog:
+    fogDensity: 0.01
+    fogColor: {r: 0.9529412, g: 0.8784314, b: 0.7176471, a: 0}
+  lighting:
+    sunSize: 0.035
+    sunConvergenceSize: 0.9
+    exposure: 1.25
+  envSFX:
+    visbility: 200
+    windStrength: 0.1
+    dustEmissionRate: 200
+    maxDust: 700
+    ambientSFX: {fileID: 8300000, guid: ec45659d9348a4740a19a799ed0ddfbf, type: 3}
+    ambientVolume: 0.1

@@ -12,18 +12,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5e6f1dc7e18575c449ba24855ef4391d, type: 3}
   m_Name: Windy
   m_EditorClassIdentifier: Assembly-CSharp::WeatherTypes
-  weatherType: 0
-  weatherWeight: 0
-  possibleStartTime: 0
+  weatherType: 2
+  weatherWeight: 200
+  minWindow: 0.2
+  maxWindow: 0.7
   fog:
-    fogDensity: 0
-    fogColor: {r: 0, g: 0, b: 0, a: 0}
+    fogDensity: 0.1
+    fogColor: {r: 0.9019608, g: 0.81960785, b: 0.6627451, a: 0}
   lighting:
     sunSize: 0.035
-    sunConvergenceSize: 1
-    exposure: 1
+    sunConvergenceSize: 0.85
+    exposure: 1.1
   envSFX:
-    windStrength: 0
-    dustEmissionRate: 0
-    ambientSFX: {fileID: 0}
-    ambientVolume: 0
+    visbility: 220
+    windStrength: 1.25
+    dustEmissionRate: 700
+    maxDust: 2000
+    ambientSFX: {fileID: 8300000, guid: 7974efede6970474c9bdaf476531f923, type: 3}
+    ambientVolume: 0.4

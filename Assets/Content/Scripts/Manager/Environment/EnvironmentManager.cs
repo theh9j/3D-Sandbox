@@ -11,8 +11,8 @@ public class EnvironmentManager : MonoBehaviour
 
     [Header("Weather")]
     [SerializeField] private WeatherTypes[] weatherTypes;
-    [SerializeField] private Material skyBox;
     [SerializeField] private ParticleSystem effects;
+    private Material skyBox;
 
     [Header("Configuration")]
     [SerializeField] private float delay = 2.5f;
@@ -43,14 +43,15 @@ public class EnvironmentManager : MonoBehaviour
     }
 
     void Start() {
+        skyBox = RenderSettings.skybox;
         ChangeWeather(Weather.Clear);
     }
 
     public void ChangeWeather(Weather weather = Weather.Randomize) {
         if (weather == Weather.Randomize) {
-            if (weatherGauge && Random.Range(0, resetChance) != 1 && 
-                (currentWeather.minWindow > lightManager.TimeOfDay || currentWeather.maxWindow < lightManager.TimeOfDay))
-                return;
+            if (IsValidAt(lightManager.TimeOfDay)) 
+                if (weatherGauge && Random.Range(0, resetChance) != 1 )
+                    return;
 
             weather = RandomWeather();
             if (weather == currentWeather.weatherType) return;
@@ -68,6 +69,11 @@ public class EnvironmentManager : MonoBehaviour
         }
     }
 
+
+    public bool IsValidAt(float timeOfDay) {
+        return timeOfDay >= currentWeather.minWindow &&
+               timeOfDay <= currentWeather.maxWindow;
+    }
     private bool IsSpecialWeather(Weather weather) {
         return weather != Weather.Clear && weather != Weather.Night;
     }
@@ -157,6 +163,7 @@ public class EnvironmentManager : MonoBehaviour
         float targetVisibility = weather.envSFX.visbility * severity;
 
         AudioManager.Instance?.PlayEnvironment(weather.envSFX.ambientSFX, weather.envSFX.ambientVolume);
+        skyBox.SetColor("_Ground", weather.fog.fogColor);
 
         float timer = 0f;
 

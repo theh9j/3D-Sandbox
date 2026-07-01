@@ -17,6 +17,7 @@ public class UIControls : ASettingsInterfaces
         );
 
         GenerateControlFuncs();
+        RefreshKeyMatches();
     }
 
     //Functionalities
@@ -37,6 +38,24 @@ public class UIControls : ASettingsInterfaces
             value => {
                 SettingsManager.Instance.UpdateSens(value);
             });
+
+        KeyInit();
+
+        KeyReset(OptionIDs.ResetKeys,
+            () => {
+                SaveManager.Instance.FirstLaunchKB();
+                KeyInit();
+            });
+
+        Dropdown(OptionIDs.SprintToggle,
+            SaveManager.Instance.sprintToggle ? 1 : 0,
+            value => {
+                SaveManager.Instance.sprintToggle = value == 1;
+            });
+    }
+
+    private void KeyInit() {
+
 
         Keybind(OptionIDs.MoveFW,
             SaveManager.Instance.moveFW,
@@ -67,11 +86,5 @@ public class UIControls : ASettingsInterfaces
             SaveManager.Instance.sprint,
             key => SaveManager.Instance.sprint = key
             );
-
-        Dropdown(OptionIDs.SprintToggle,
-            SaveManager.Instance.sprintToggle ? 1 : 0,
-            value => {
-                SaveManager.Instance.sprintToggle = value == 1;
-            });
     }
 }

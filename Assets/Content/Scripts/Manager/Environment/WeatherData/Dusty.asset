@@ -12,20 +12,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5e6f1dc7e18575c449ba24855ef4391d, type: 3}
   m_Name: Dusty
   m_EditorClassIdentifier: Assembly-CSharp::WeatherTypes
-  weatherType: 0
-  weatherWeight: 0
-  possibleStartTime: 0
+  weatherType: 5
+  weatherWeight: 200
+  minWindow: 0.1
+  maxWindow: 0.7
   fog:
-    fogDensity: 0
-    fogColor: {r: 0, g: 0, b: 0, a: 0}
+    fogDensity: 0.15
+    fogColor: {r: 0.8980392, g: 0.7921569, b: 0.627451, a: 0}
   lighting:
-    sunSize: 0.035
-    sunConvergenceSize: 1
-    exposure: 1
+    sunSize: 0.04
+    sunConvergenceSize: 0.8
+    exposure: 1.1
   envSFX:
-    visbility: 0
-    windStrength: 0
-    dustEmissionRate: 0
-    maxDust: 0
-    ambientSFX: {fileID: 0}
-    ambientVolume: 0
+    visbility: 60
+    windStrength: 0.12
+    dustEmissionRate: 3000
+    maxDust: 5000
+    ambientSFX: {fileID: 8300000, guid: ec45659d9348a4740a19a799ed0ddfbf, type: 3}
+    ambientVolume: 0.15
